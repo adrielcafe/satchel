@@ -1,8 +1,8 @@
 package cafe.adriel.satchel.serializer.base64.android
 
 import android.util.Base64
-import cafe.adriel.satchel.core.ktx.deserialize
-import cafe.adriel.satchel.core.ktx.serialize
+import cafe.adriel.satchel.ktx.deserialize
+import cafe.adriel.satchel.ktx.serialize
 import cafe.adriel.satchel.serializer.SatchelSerializer
 
 object Base64SatchelSerializer : SatchelSerializer {

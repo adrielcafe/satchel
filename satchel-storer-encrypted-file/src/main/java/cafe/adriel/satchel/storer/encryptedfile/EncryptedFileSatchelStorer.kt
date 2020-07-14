@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.EncryptedFile.FileEncryptionScheme
 import androidx.security.crypto.MasterKeys
-import cafe.adriel.satchel.core.ktx.isEmpty
+import cafe.adriel.satchel.ktx.isEmpty
 import cafe.adriel.satchel.storer.SatchelStorer
 import java.io.File
 

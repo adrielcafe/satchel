@@ -3,7 +3,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 dependencies {
     implementation project(':satchel-core')
-    implementation project(':satchel-core-ktx')
 
     implementation ModuleLib.SECURITY_CRYPTO
 }

@@ -1,6 +1,6 @@
 package cafe.adriel.satchel.storer
 
-import cafe.adriel.satchel.core.ktx.serialize
+import cafe.adriel.satchel.ktx.serialize
 import cafe.adriel.satchel.storer.file.FileSatchelStorer
 import cafe.adriel.satchel.util.SampleData
 import com.google.crypto.tink.aead.AeadConfig

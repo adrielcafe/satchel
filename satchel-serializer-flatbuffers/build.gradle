@@ -7,7 +7,6 @@ apply plugin: 'jacoco'
 
 dependencies {
     implementation project(':satchel-core')
-    implementation project(':satchel-core-ktx')
 
     // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
     // implementation ModuleLib.FLATBUFFERS

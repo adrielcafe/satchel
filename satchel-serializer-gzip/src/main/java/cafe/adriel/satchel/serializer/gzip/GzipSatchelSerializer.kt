@@ -1,7 +1,7 @@
 package cafe.adriel.satchel.serializer.gzip
 
-import cafe.adriel.satchel.core.ktx.deserialize
-import cafe.adriel.satchel.core.ktx.serialize
+import cafe.adriel.satchel.ktx.deserialize
+import cafe.adriel.satchel.ktx.serialize
 import cafe.adriel.satchel.serializer.SatchelSerializer
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPInputStream

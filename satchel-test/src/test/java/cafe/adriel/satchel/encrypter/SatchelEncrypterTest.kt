@@ -1,6 +1,6 @@
 package cafe.adriel.satchel.encrypter
 
-import cafe.adriel.satchel.core.ktx.serialize
+import cafe.adriel.satchel.ktx.serialize
 import cafe.adriel.satchel.encrypter.cipher.CipherSatchelEncrypter
 import cafe.adriel.satchel.encrypter.cipher.CipherSatchelEncrypter.CipherKey
 import cafe.adriel.satchel.encrypter.jose4j.Jose4jSatchelEncrypter

@@ -24,7 +24,6 @@ test {
 
 dependencies {
     implementation project(':satchel-core')
-    implementation project(':satchel-core-ktx')
 
     implementation project(':satchel-encrypter-cipher')
     implementation project(':satchel-encrypter-tink-jvm')

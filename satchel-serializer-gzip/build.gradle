@@ -6,5 +6,4 @@ group = Maven.GROUP_ID
 
 dependencies {
     implementation project(':satchel-core')
-    implementation project(':satchel-core-ktx')
 }

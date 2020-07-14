@@ -6,7 +6,6 @@ include ':sample',
         ':satchel-benchmark',
 
         ':satchel-core',
-        ':satchel-core-ktx',
 
         ':satchel-storer-encrypted-file',
 

@@ -1,4 +1,4 @@
-package cafe.adriel.satchel.core.ktx
+package cafe.adriel.satchel.ktx
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

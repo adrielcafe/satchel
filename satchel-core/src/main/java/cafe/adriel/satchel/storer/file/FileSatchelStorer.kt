@@ -1,6 +1,6 @@
 package cafe.adriel.satchel.storer.file
 
-import cafe.adriel.satchel.core.ktx.isEmpty
+import cafe.adriel.satchel.ktx.isEmpty
 import cafe.adriel.satchel.storer.SatchelStorer
 import java.io.File
 
