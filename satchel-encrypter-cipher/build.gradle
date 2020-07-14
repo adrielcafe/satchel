@@ -1,0 +1,9 @@
+apply from: '../kotlin-lib.gradle'
+apply plugin: 'jacoco'
+apply plugin: 'maven'
+
+group = Maven.GROUP_ID
+
+dependencies {
+    implementation project(':satchel-core')
+}

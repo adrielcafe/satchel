@@ -1,0 +1,23 @@
+rootProject.name='Satchel'
+
+include ':sample',
+        
+        ':satchel-test',
+        ':satchel-benchmark',
+
+        ':satchel-core',
+        ':satchel-core-ktx',
+
+        ':satchel-storer-encrypted-file',
+
+        ':satchel-encrypter-cipher',
+        ':satchel-encrypter-tink-jvm',
+        ':satchel-encrypter-tink-android',
+        ':satchel-encrypter-jose4j',
+
+        ':satchel-serializer-gzip',
+        ':satchel-serializer-base64-jvm',
+        ':satchel-serializer-base64-android',
+        ':satchel-serializer-protobuf',
+        ':satchel-serializer-flatbuffers',
+        ':satchel-serializer-kryo'

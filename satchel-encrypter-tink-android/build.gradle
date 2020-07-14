@@ -1,0 +1,8 @@
+apply from: '../android-lib.gradle'
+apply plugin: 'com.github.dcendents.android-maven'
+
+dependencies {
+    implementation project(':satchel-core')
+    
+    implementation ModuleLib.TINK_ANDROID
+}

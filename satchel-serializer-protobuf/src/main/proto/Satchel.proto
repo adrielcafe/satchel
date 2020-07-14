@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "cafe.adriel.satchel.serializer.protobuf.proto";
+option java_outer_classname = "SatchelProto";
+option java_multiple_files = false;
+
+message Satchel {
+    map<string, Value> storage = 1;
+}
+
+message Value {
+    Type single_value = 1;
+    repeated Type multi_value = 2;
+
+    message Type {
+        oneof type {
+            double double_value = 1;
+            float float_value = 2;
+            sint32 int_value = 3;
+            sint64 long_value = 4;
+            bool bool_value = 5;
+            string string_value = 6;
+        }
+    }
+}

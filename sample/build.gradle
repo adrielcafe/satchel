@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    defaultConfig {
+        applicationId "cafe.adriel.satchel.sample"
+        minSdkVersion 23 // Required by androidx.security, 1.1.0 will support >= 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':satchel-core')
+
+    implementation project(':satchel-storer-encrypted-file')
+    
+    implementation project(':satchel-encrypter-cipher')
+    implementation project(':satchel-encrypter-tink-android')
+    implementation project(':satchel-encrypter-jose4j')
+    
+    implementation project(':satchel-serializer-base64-android')
+    implementation project(':satchel-serializer-gzip')
+    implementation project(':satchel-serializer-protobuf')
+    implementation project(':satchel-serializer-flatbuffers')
+    implementation project(':satchel-serializer-kryo')
+    
+    implementation ModuleLib.MULTIDEX
+    implementation ModuleLib.SECURITY_CRYPTO
+    implementation ModuleLib.TINK_ANDROID
+    implementation ModuleLib.JOSE4J
+    implementation ModuleLib.COROUTINES_ANDROID
+    implementation ModuleLib.APP_COMPAT
+    implementation ModuleLib.ACTIVITY
+    implementation ModuleLib.LIFECYCLE_VIEWMODEL
+}
