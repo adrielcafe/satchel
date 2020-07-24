@@ -1,7 +1,0 @@
---android
---reporter=plain
---color
---reporter=plain,output=C:\Users\me\Workspace\Android\satchel\satchel-benchmark\build\reports\ktlint\ktlintAndroidTestSourceSetFormat.txt
--F
-src\androidTest\java\cafe\adriel\satchel\benchmark\Read1kStringsBenchmark.kt
-src\androidTest\java\cafe\adriel\satchel\benchmark\Write1kStringsBenchmark.kt
