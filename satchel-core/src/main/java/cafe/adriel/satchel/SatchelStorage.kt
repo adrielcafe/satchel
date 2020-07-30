@@ -1,62 +1,35 @@
 package cafe.adriel.satchel
 
-import java.util.concurrent.ConcurrentHashMap
+import java.io.Closeable
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
-abstract class SatchelStorage {
-
-    @PublishedApi
-    internal val storage: MutableMap<String, Any> = ConcurrentHashMap()
-
-    protected abstract fun onStorageChanged(event: SatchelEvent)
-
-    abstract fun addListener(listener: (SatchelEvent) -> Unit)
-
-    abstract fun removeListener(listener: (SatchelEvent) -> Unit)
-
-    abstract fun clearListeners()
+interface SatchelStorage : Closeable {
 
     val keys: Set<String>
-        get() = storage.keys
 
     val size: Int
-        get() = storage.size
 
     val isEmpty: Boolean
-        get() = storage.isEmpty()
 
-    inline infix operator fun <reified T : Any> get(key: String): T? =
-        storage[key] as? T
+    val isClosed: Boolean
 
-    inline fun <reified T : Any> getOrDefault(key: String, defaultValue: T): T =
-        get(key) ?: defaultValue
+    fun addListener(
+        scope: CoroutineScope,
+        dispatcher: CoroutineDispatcher = Dispatchers.Main,
+        listener: suspend (SatchelEvent) -> Unit
+    )
 
-    inline fun <reified T : Any> getOrSet(key: String, defaultValue: T): T =
-        get(key) ?: run {
-            set(key, defaultValue)
-            defaultValue
-        }
+    infix fun contains(key: String): Boolean
 
-    operator fun <T : Any> set(key: String, value: T) {
-        storage[key] = value
-        onStorageChanged(SatchelEvent.Set(key))
-    }
+    infix fun getAny(key: String): Any?
 
-    fun <T : Any> setIfAbsent(key: String, value: T) {
-        if (contains(key).not()) {
-            set(key, value)
-        }
-    }
+    operator fun <T : Any> set(key: String, value: T)
 
-    infix fun contains(key: String): Boolean =
-        storage.containsKey(key)
+    fun <T : Any> setIfAbsent(key: String, value: T)
 
-    infix fun remove(key: String) {
-        storage.remove(key)
-            ?.also { onStorageChanged(SatchelEvent.Remove(key)) }
-    }
+    infix fun remove(key: String)
 
-    fun clear() {
-        storage.clear()
-        onStorageChanged(SatchelEvent.Clear)
-    }
+    fun clear()
 }

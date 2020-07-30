@@ -32,7 +32,8 @@ dependencies {
     implementation project(':satchel-serializer-base64-android')
     implementation project(':satchel-serializer-gzip')
     implementation project(':satchel-serializer-protobuf')
-    implementation project(':satchel-serializer-flatbuffers')
+    // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
+//    implementation project(':satchel-serializer-flatbuffers')
     implementation project(':satchel-serializer-kryo')
     
     implementation ModuleLib.MULTIDEX
@@ -43,4 +44,6 @@ dependencies {
     implementation ModuleLib.APP_COMPAT
     implementation ModuleLib.ACTIVITY
     implementation ModuleLib.LIFECYCLE_VIEWMODEL
+
+    debugImplementation ModuleLib.LEAK_CANARY
 }

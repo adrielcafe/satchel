@@ -6,3 +6,6 @@
 .externalNativeBuild
 .gradle
 *.iml
+
+# TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
+/satchel-serializer-flatbuffers

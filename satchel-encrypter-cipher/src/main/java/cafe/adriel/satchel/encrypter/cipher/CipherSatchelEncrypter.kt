@@ -24,7 +24,8 @@ class CipherSatchelEncrypter private constructor(
             with(
                 Cipher.getInstance(
                     transformation
-                ), cipherKey
+                ),
+                cipherKey
             )
     }
 

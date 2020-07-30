@@ -5,28 +5,32 @@ import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
 import cafe.adriel.satchel.serializer.SatchelSerializer
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.SatchelStorer
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 class Satchel private constructor(
     private val storer: SatchelStorer,
     private val serializer: SatchelSerializer,
     private val encrypter: SatchelEncrypter,
-    storageScope: CoroutineScope,
-    saveDispatcher: CoroutineContext,
-    eventDispatcher: CoroutineContext
-) : SatchelStorage() {
+    dispatcher: CoroutineDispatcher
+) : SatchelConcurrentStorage() {
 
     companion object {
 
@@ -40,85 +44,86 @@ class Satchel private constructor(
             storer: SatchelStorer,
             serializer: SatchelSerializer = RawSatchelSerializer,
             encrypter: SatchelEncrypter = NoneSatchelEncrypter,
-            storageScope: CoroutineScope = GlobalScope,
-            saveDispatcher: CoroutineContext = Dispatchers.IO,
-            eventDispatcher: CoroutineContext = Dispatchers.Main
+            dispatcher: CoroutineDispatcher = Dispatchers.IO
         ) {
-            storage = with(storer, serializer, encrypter, storageScope, saveDispatcher, eventDispatcher)
+            check(isInitialized.not()) { "Satchel has already been initialized" }
+
+            storage = with(storer, serializer, encrypter, dispatcher)
         }
 
         fun with(
             storer: SatchelStorer,
             serializer: SatchelSerializer = RawSatchelSerializer,
             encrypter: SatchelEncrypter = NoneSatchelEncrypter,
-            storageScope: CoroutineScope = GlobalScope,
-            saveDispatcher: CoroutineContext = Dispatchers.IO,
-            eventDispatcher: CoroutineContext = Dispatchers.Main
+            dispatcher: CoroutineDispatcher = Dispatchers.IO
         ): SatchelStorage =
-            Satchel(storer, serializer, encrypter, storageScope, saveDispatcher, eventDispatcher)
+            Satchel(storer, serializer, encrypter, dispatcher)
     }
+
+    private val scope = CoroutineScope(SupervisorJob() + dispatcher)
 
     private val saveChannel = Channel<Unit>(Channel.CONFLATED)
     private val saveMutex = Mutex()
 
-    // TODO migrate to SharedFlow when released
-    private val eventChannel = Channel<SatchelEvent>(Channel.RENDEZVOUS)
-    private val eventListeners = mutableSetOf<(SatchelEvent) -> Unit>()
+    private val eventChannel = BroadcastChannel<SatchelEvent>(Channel.BUFFERED)
+    private var hasEventListeners = false
+
+    override val isClosed: Boolean
+        get() = scope.isActive.not()
 
     init {
-        storage += loadData()
+        storage += loadStorage()
 
         saveChannel
             .consumeAsFlow()
             .map { storage.toMap() }
-            .onEach(::saveData)
-            .flowOn(saveDispatcher)
-            .launchIn(storageScope)
-
-        eventChannel
-            .consumeAsFlow()
-            .onEach { event -> eventListeners.forEach { it(event) } }
-            .flowOn(eventDispatcher)
-            .launchIn(storageScope)
-            .invokeOnCompletion {
-                // TODO needs more tests
-                clearListeners()
-            }
+            .onEach(::saveStorage)
+            .launchIn(scope)
     }
 
     override fun onStorageChanged(event: SatchelEvent) {
         saveChannel.sendBlocking(Unit)
-        eventChannel.offer(event)
+
+        if (hasEventListeners) {
+            eventChannel.sendBlocking(event)
+        }
     }
 
-    override fun addListener(listener: (SatchelEvent) -> Unit) {
-        eventListeners += listener
+    override fun addListener(
+        scope: CoroutineScope,
+        dispatcher: CoroutineDispatcher,
+        listener: suspend (SatchelEvent) -> Unit
+    ) {
+        hasEventListeners = true
+
+        eventChannel
+            .asFlow()
+            .onEach(listener)
+            .flowOn(dispatcher)
+            .launchIn(scope)
     }
 
-    override fun removeListener(listener: (SatchelEvent) -> Unit) {
-        eventListeners -= listener
+    override fun close() {
+        scope.cancel()
     }
 
-    override fun clearListeners() =
-        eventListeners.clear()
+    private fun loadStorage(): Map<String, Any> =
+        storer.load()
+            .let(encrypter::decrypt)
+            .let(serializer::deserialize)
 
-    private fun loadData(): Map<String, Any> =
-        runCatching {
-            storer.load()
-                .let(encrypter::decrypt)
-                .let(serializer::deserialize)
-        }.onFailure { error ->
-            eventChannel.offer(SatchelEvent.LoadError(error))
-        }.getOrDefault(emptyMap())
-
-    private suspend fun saveData(storage: Map<String, Any>) {
-        saveMutex.withLock {
-            runCatching {
-                serializer.serialize(storage)
-                    .let { encrypter.encrypt(it) }
-                    .let { storer.save(it) }
-            }.onFailure { error ->
-                eventChannel.offer(SatchelEvent.SaveError(error))
+    private suspend fun saveStorage(storage: Map<String, Any>) {
+        withContext(NonCancellable) {
+            saveMutex.withLock {
+                runCatching {
+                    serializer.serialize(storage)
+                        .let { encrypter.encrypt(it) }
+                        .let { storer.save(it) }
+                }.onFailure { error ->
+                    if (hasEventListeners) {
+                        eventChannel.sendBlocking(SatchelEvent.SaveError(error))
+                    }
+                }
             }
         }
     }

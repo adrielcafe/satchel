@@ -1,0 +1,47 @@
+apply from: '../kotlin-lib.gradle'
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.5"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        csv.enabled false
+    }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+    jacoco {
+        includeNoLocationClasses true
+        excludes ['**/cafe/adriel/satchel/SatchelMap.kt']
+    }
+}
+
+dependencies {
+    implementation project(':satchel-core')
+
+    implementation project(':satchel-encrypter-cipher')
+    implementation project(':satchel-encrypter-tink-jvm')
+    implementation project(':satchel-encrypter-jose4j')
+
+    implementation project(':satchel-serializer-gzip')
+    implementation project(':satchel-serializer-base64-jvm')
+    implementation project(':satchel-serializer-protobuf')
+    // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
+//    implementation project(':satchel-serializer-flatbuffers')
+    implementation project(':satchel-serializer-kryo')
+
+    implementation ModuleLib.TINK_JVM
+    implementation ModuleLib.JOSE4J
+
+    testRuntimeOnly TestLib.JUNIT_ENGINE
+    testImplementation TestLib.JUNIT_API
+    testImplementation TestLib.COROUTINES
+    testImplementation TestLib.MOCKK
+    testImplementation TestLib.STRIKT
+}

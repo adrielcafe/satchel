@@ -1,35 +1,36 @@
 @file:Suppress("Unused", "MayBeConstant", "MemberVisibilityCanBePrivate")
 
 internal object Version {
-    const val GRADLE_ANDROID = "4.0.0"
-    const val GRADLE_DETEKT = "1.7.4"
-    const val GRADLE_KTLINT = "9.2.1"
-    const val GRADLE_VERSIONS = "0.28.0"
+    const val GRADLE_ANDROID = "4.0.1"
+    const val GRADLE_DETEKT = "1.10.0"
+    const val GRADLE_KTLINT = "9.3.0"
+    const val GRADLE_VERSIONS = "0.29.0"
     const val GRADLE_MAVEN = "2.1"
 
     const val KOTLIN = "1.3.72"
-    const val COROUTINES = "1.3.7"
+    const val COROUTINES = "1.3.8"
     
     // Storers
     const val SECURITY_CRYPTO = "1.0.0-rc02"
     
     // Encrypters
-    const val TINK = "1.4.0-rc2"
-    const val JOSE4J = "0.7.1"
+    const val TINK = "1.4.0"
+    const val JOSE4J = "0.7.2"
     
     // Serializers
     const val PROTOBUF = "3.12.2"
     const val FLATBUFFERS = "1.12.0"
-    const val KRYO = "5.0.0-RC6"
+    const val KRYO = "5.0.0-RC7"
 
     // Sample
     const val MULTIDEX = "2.0.1"
     const val APP_COMPAT = "1.1.0"
     const val ACTIVITY = "1.1.0"
     const val LIFECYCLE = "2.2.0"
+    const val LEAK_CANARY = "2.4"
 
     // Third-party libraries
-    const val MMKV = "1.1.2"
+    const val MMKV = "1.2.1"
     const val PAPER = "2.7.1"
     const val HAWK = "2.0.1"
 
@@ -79,6 +80,7 @@ object ModuleLib {
     const val ACTIVITY = "androidx.activity:activity-ktx:${Version.ACTIVITY}"
     const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${Version.LIFECYCLE}"
     const val LIFECYCLE_VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Version.LIFECYCLE}"
+    const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android:${Version.LEAK_CANARY}"
 
     // Third-party libraries
     const val MMKV = "com.tencent:mmkv-static:${Version.MMKV}"

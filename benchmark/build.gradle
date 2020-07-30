@@ -1,0 +1,62 @@
+apply from: '../android-lib.gradle'
+apply plugin: 'androidx.benchmark'
+
+android {
+    defaultConfig {
+        minSdkVersion 26 // Required by Kryo RC6
+        testInstrumentationRunner 'androidx.benchmark.junit4.AndroidBenchmarkRunner'
+    }
+    
+    signingConfigs {
+        release {
+            keyPassword 'benchmark'
+            keyAlias 'benchmark'
+            storePassword 'benchmark'
+            storeFile file('benchmark.jks')
+        }
+    }
+
+    testBuildType = "release"
+    buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "benchmark-proguard-rules.pro"
+        }
+        release {
+            isDefault = true
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    androidTestImplementation project(':satchel-core')
+
+    androidTestImplementation project(':satchel-storer-encrypted-file')
+    
+    androidTestImplementation project(':satchel-encrypter-cipher')
+    androidTestImplementation project(':satchel-encrypter-tink-android')
+    androidTestImplementation project(':satchel-encrypter-jose4j')
+
+    androidTestImplementation project(':satchel-serializer-gzip')
+    androidTestImplementation project(':satchel-serializer-base64-jvm')
+    androidTestImplementation project(':satchel-serializer-base64-android')
+    androidTestImplementation project(':satchel-serializer-protobuf')
+    // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
+//    androidTestImplementation project(':satchel-serializer-flatbuffers')
+    androidTestImplementation project(':satchel-serializer-kryo')
+
+    androidTestImplementation ModuleLib.TINK_ANDROID
+    androidTestImplementation ModuleLib.JOSE4J
+
+    androidTestImplementation ModuleLib.SECURITY_CRYPTO
+    androidTestImplementation ModuleLib.MMKV
+    androidTestImplementation ModuleLib.PAPER
+    androidTestImplementation ModuleLib.HAWK
+    
+    androidTestImplementation BenchmarkLib.BENCHMARK
+    androidTestImplementation BenchmarkLib.JUNIT
+    androidTestImplementation BenchmarkLib.ANDROID_JUNIT
+    androidTestImplementation BenchmarkLib.ANDROID_RUNNER
+    androidTestImplementation BenchmarkLib.COROUTINES
+}

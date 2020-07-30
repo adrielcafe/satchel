@@ -4,8 +4,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.satchel.Satchel
-import cafe.adriel.satchel.encrypter.tink.android.TinkSatchelEncrypter
-import cafe.adriel.satchel.serializer.flatbuffers.FlatbuffersSatchelSerializer
+import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
+import cafe.adriel.satchel.ktx.get
+import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.file.FileSatchelStorer
 import java.io.File
 import kotlin.random.Random
@@ -27,8 +28,8 @@ class SampleActivity : AppCompatActivity(R.layout.activity_sample) {
     private val satchel by lazy {
         Satchel.with(
             storer = FileSatchelStorer(satchelFile),
-            encrypter = TinkSatchelEncrypter.with(applicationContext),
-            serializer = FlatbuffersSatchelSerializer
+            encrypter = NoneSatchelEncrypter,
+            serializer = RawSatchelSerializer
         )
     }
 
@@ -40,7 +41,7 @@ class SampleActivity : AppCompatActivity(R.layout.activity_sample) {
     }
 
     private suspend fun runSample() {
-        satchel.addListener { event ->
+        satchel.addListener(lifecycleScope) { event ->
             Log.e("SATCHEL EVENT", event.toString())
         }
 
