@@ -6,6 +6,7 @@ import androidx.benchmark.junit4.measureRepeated
 import androidx.test.core.app.ApplicationProvider
 import cafe.adriel.satchel.Satchel
 import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
+import cafe.adriel.satchel.ktx.get
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.file.FileSatchelStorer
 import com.orhanobut.hawk.Hawk
@@ -17,8 +18,6 @@ import org.junit.Test
 
 class SatchelReadBenchmark {
 
-    private val coroutineScope = TestCoroutineScope()
-
     @get:Rule
     val benchmarkRule = BenchmarkRule()
 
@@ -28,14 +27,14 @@ class SatchelReadBenchmark {
         val serializer = RawSatchelSerializer
         val encrypter = NoneSatchelEncrypter
 
-        val writeSatchel = Satchel.with(storer, serializer, encrypter, coroutineScope)
+        val writeSatchel = Satchel.with(storer, serializer, encrypter)
 
         sampleData.forEach { (key, value) ->
             writeSatchel[key] = value
         }
 
         benchmarkRule.measureRepeated {
-            val readSatchel = Satchel.with(storer, serializer, encrypter, coroutineScope)
+            val readSatchel = Satchel.with(storer, serializer, encrypter)
             sampleData.forEach { (key, _) ->
                 val storedValue = readSatchel.get<String>(key)
             }

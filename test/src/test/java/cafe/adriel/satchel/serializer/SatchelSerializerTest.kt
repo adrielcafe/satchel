@@ -30,7 +30,7 @@ class SatchelSerializerTest {
             gzipSerializer,
             base64Serializer,
             kryoSerializer,
-            protobufSerializer,
+            protobufSerializer
             // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
 //            flatbuffersSerializer
         ).map { serializer ->
@@ -51,7 +51,7 @@ class SatchelSerializerTest {
             gzipSerializer,
             base64Serializer,
             kryoSerializer,
-            protobufSerializer,
+            protobufSerializer
             // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
 //            flatbuffersSerializer
         ).map { serializer ->

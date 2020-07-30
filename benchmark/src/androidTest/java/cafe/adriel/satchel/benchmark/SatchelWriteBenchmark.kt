@@ -17,8 +17,6 @@ import org.junit.Test
 
 class SatchelWriteBenchmark {
 
-    private val coroutineScope = TestCoroutineScope()
-
     @get:Rule
     val benchmarkRule = BenchmarkRule()
 
@@ -27,8 +25,7 @@ class SatchelWriteBenchmark {
         val satchel = Satchel.with(
             storer = FileSatchelStorer(randomFile),
             serializer = RawSatchelSerializer,
-            encrypter = NoneSatchelEncrypter,
-            storageScope = coroutineScope
+            encrypter = NoneSatchelEncrypter
         )
 
         benchmarkRule.measureRepeated {
