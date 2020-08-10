@@ -11,26 +11,26 @@ internal object Version {
     const val COROUTINES = "1.3.8"
     
     // Storers
-    const val SECURITY_CRYPTO = "1.0.0-rc02"
+    const val SECURITY_CRYPTO = "1.0.0-rc03"
     
     // Encrypters
     const val TINK = "1.4.0"
     const val JOSE4J = "0.7.2"
     
     // Serializers
-    const val PROTOBUF = "3.12.2"
+    const val PROTOBUF = "3.12.4"
     const val FLATBUFFERS = "1.12.0"
-    const val KRYO = "5.0.0-RC7"
+    const val KRYO = "5.0.0-RC8"
 
     // Sample
     const val MULTIDEX = "2.0.1"
-    const val APP_COMPAT = "1.1.0"
+    const val APP_COMPAT = "1.2.0"
     const val ACTIVITY = "1.1.0"
     const val LIFECYCLE = "2.2.0"
     const val LEAK_CANARY = "2.4"
 
     // Third-party libraries
-    const val MMKV = "1.2.1"
+    const val MMKV = "1.2.2"
     const val PAPER = "2.7.1"
     const val HAWK = "2.0.1"
 
