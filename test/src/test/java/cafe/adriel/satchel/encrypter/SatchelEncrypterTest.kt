@@ -1,9 +1,9 @@
 package cafe.adriel.satchel.encrypter
 
+import cafe.adriel.satchel.encrypter.bypass.BypassSatchelEncrypter
 import cafe.adriel.satchel.encrypter.cipher.CipherSatchelEncrypter
 import cafe.adriel.satchel.encrypter.cipher.CipherSatchelEncrypter.CipherKey
 import cafe.adriel.satchel.encrypter.jose4j.Jose4jSatchelEncrypter
-import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
 import cafe.adriel.satchel.encrypter.tink.jvm.TinkSatchelEncrypter
 import cafe.adriel.satchel.ktx.serialize
 import cafe.adriel.satchel.util.SampleData
@@ -27,14 +27,14 @@ class SatchelEncrypterTest {
         AeadConfig.register()
     }
 
-    private val noneEncrypter = NoneSatchelEncrypter
+    private val bypassEncrypter = BypassSatchelEncrypter
     private val cipherEncrypter = CipherSatchelEncrypter.with(
         cipherKey = CipherKey.SecretKey(
             key = KeyGenerator.getInstance("AES").apply { init(128) }.generateKey()
         )
     )
     private val tinkEncrypter = TinkSatchelEncrypter.with(
-        keysetHandle = KeysetHandle.generateNew(AesGcmKeyManager.aes128GcmTemplate())
+        keyset = KeysetHandle.generateNew(AesGcmKeyManager.aes128GcmTemplate())
     )
     private val jose4jEncrypter = Jose4jSatchelEncrypter.with(
         jwk = RsaJwkGenerator.generateJwk(2048)
@@ -45,7 +45,7 @@ class SatchelEncrypterTest {
     @TestFactory
     fun `when encrypt a byte array then decrypt correctly`(): Stream<DynamicTest> =
         Stream.of(
-            noneEncrypter,
+            bypassEncrypter,
             cipherEncrypter,
             tinkEncrypter,
             jose4jEncrypter

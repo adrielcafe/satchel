@@ -1,8 +1,8 @@
-package cafe.adriel.satchel.encrypter.none
+package cafe.adriel.satchel.encrypter.bypass
 
 import cafe.adriel.satchel.encrypter.SatchelEncrypter
 
-object NoneSatchelEncrypter : SatchelEncrypter {
+object BypassSatchelEncrypter : SatchelEncrypter {
 
     override suspend fun encrypt(data: ByteArray): ByteArray =
         data

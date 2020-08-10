@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.satchel.Satchel
-import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
+import cafe.adriel.satchel.encrypter.bypass.BypassSatchelEncrypter
 import cafe.adriel.satchel.ktx.get
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.file.FileSatchelStorer
@@ -28,7 +28,7 @@ class SampleActivity : AppCompatActivity(R.layout.activity_sample) {
     private val satchel by lazy {
         Satchel.with(
             storer = FileSatchelStorer(satchelFile),
-            encrypter = NoneSatchelEncrypter,
+            encrypter = BypassSatchelEncrypter,
             serializer = RawSatchelSerializer
         )
     }

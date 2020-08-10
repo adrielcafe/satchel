@@ -14,17 +14,11 @@ class TinkSatchelEncrypter private constructor(
 
         private val DEFAULT_ASSOCIATED_DATA = ByteArray(size = 0)
 
-        fun with(
-            aead: Aead,
-            associatedData: ByteArray = DEFAULT_ASSOCIATED_DATA
-        ): TinkSatchelEncrypter =
+        fun with(aead: Aead, associatedData: ByteArray = DEFAULT_ASSOCIATED_DATA): TinkSatchelEncrypter =
             TinkSatchelEncrypter(aead, associatedData)
 
-        fun with(
-            keysetHandle: KeysetHandle,
-            associatedData: ByteArray = DEFAULT_ASSOCIATED_DATA
-        ): TinkSatchelEncrypter =
-            with(keysetHandle.getPrimitive(Aead::class.java), associatedData)
+        fun with(keyset: KeysetHandle, associatedData: ByteArray = DEFAULT_ASSOCIATED_DATA): TinkSatchelEncrypter =
+            with(keyset.getPrimitive(Aead::class.java), associatedData)
     }
 
     init {

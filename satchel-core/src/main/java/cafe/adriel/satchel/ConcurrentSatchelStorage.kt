@@ -2,7 +2,7 @@ package cafe.adriel.satchel
 
 import java.util.concurrent.ConcurrentHashMap
 
-abstract class SatchelConcurrentStorage : SatchelStorage {
+abstract class ConcurrentSatchelStorage : SatchelStorage {
 
     private companion object {
         const val CHECK_CLOSED_MESSAGE = "Satchel is closed"

@@ -1,6 +1,6 @@
 package cafe.adriel.satchel
 
-import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
+import cafe.adriel.satchel.encrypter.bypass.BypassSatchelEncrypter
 import cafe.adriel.satchel.ktx.get
 import cafe.adriel.satchel.ktx.getOrDefault
 import cafe.adriel.satchel.ktx.getOrElse
@@ -32,7 +32,7 @@ class SatchelTest {
 
     private lateinit var storer: SatchelStorer
     private val serializer = spyk<RawSatchelSerializer>()
-    private val encrypter = spyk<NoneSatchelEncrypter>()
+    private val encrypter = spyk<BypassSatchelEncrypter>()
 
     private val randomFile: File
         get() = File.createTempFile(UUID.randomUUID().toString(), "")

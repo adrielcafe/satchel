@@ -10,6 +10,7 @@ import cafe.adriel.satchel.serializer.base64.jvm.Base64SatchelSerializer as JvmB
 import cafe.adriel.satchel.serializer.gzip.GzipSatchelSerializer
 import cafe.adriel.satchel.serializer.kryo.KryoSatchelSerializer
 import cafe.adriel.satchel.serializer.protobuf.ProtobufSatchelSerializer
+import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +19,9 @@ class SerializerReadBenchmark {
 
     @get:Rule
     val benchmarkRule = BenchmarkRule()
+
+    @Test
+    fun raw() = runBenchmark(RawSatchelSerializer)
 
     @Test
     fun gzip() = runBenchmark(GzipSatchelSerializer)

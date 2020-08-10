@@ -1,7 +1,7 @@
 package cafe.adriel.satchel
 
 import cafe.adriel.satchel.encrypter.SatchelEncrypter
-import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
+import cafe.adriel.satchel.encrypter.bypass.BypassSatchelEncrypter
 import cafe.adriel.satchel.serializer.SatchelSerializer
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.SatchelStorer
@@ -30,7 +30,7 @@ class Satchel private constructor(
     private val serializer: SatchelSerializer,
     private val encrypter: SatchelEncrypter,
     dispatcher: CoroutineDispatcher
-) : SatchelConcurrentStorage() {
+) : ConcurrentSatchelStorage() {
 
     companion object {
 
@@ -43,7 +43,7 @@ class Satchel private constructor(
         fun init(
             storer: SatchelStorer,
             serializer: SatchelSerializer = RawSatchelSerializer,
-            encrypter: SatchelEncrypter = NoneSatchelEncrypter,
+            encrypter: SatchelEncrypter = BypassSatchelEncrypter,
             dispatcher: CoroutineDispatcher = Dispatchers.IO
         ) {
             check(isInitialized.not()) { "Satchel has already been initialized" }
@@ -54,7 +54,7 @@ class Satchel private constructor(
         fun with(
             storer: SatchelStorer,
             serializer: SatchelSerializer = RawSatchelSerializer,
-            encrypter: SatchelEncrypter = NoneSatchelEncrypter,
+            encrypter: SatchelEncrypter = BypassSatchelEncrypter,
             dispatcher: CoroutineDispatcher = Dispatchers.IO
         ): SatchelStorage =
             Satchel(storer, serializer, encrypter, dispatcher)
@@ -65,6 +65,7 @@ class Satchel private constructor(
     private val saveChannel = Channel<Unit>(Channel.CONFLATED)
     private val saveMutex = Mutex()
 
+    // TODO replace with SharedFlow after migrate to Kotlin 1.4
     private val eventChannel = BroadcastChannel<SatchelEvent>(Channel.BUFFERED)
     private var hasEventListeners = false
 
@@ -115,15 +116,9 @@ class Satchel private constructor(
     private suspend fun saveStorage(storage: Map<String, Any>) {
         withContext(NonCancellable) {
             saveMutex.withLock {
-                runCatching {
-                    serializer.serialize(storage)
-                        .let { encrypter.encrypt(it) }
-                        .let { storer.save(it) }
-                }.onFailure { error ->
-                    if (hasEventListeners) {
-                        eventChannel.sendBlocking(SatchelEvent.SaveError(error))
-                    }
-                }
+                serializer.serialize(storage)
+                    .let { encrypter.encrypt(it) }
+                    .let { storer.save(it) }
             }
         }
     }

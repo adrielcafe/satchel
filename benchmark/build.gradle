@@ -46,10 +46,10 @@ dependencies {
 //    androidTestImplementation project(':satchel-serializer-flatbuffers')
     androidTestImplementation project(':satchel-serializer-kryo')
 
+    androidTestImplementation ModuleLib.SECURITY_CRYPTO
     androidTestImplementation ModuleLib.TINK_ANDROID
     androidTestImplementation ModuleLib.JOSE4J
 
-    androidTestImplementation ModuleLib.SECURITY_CRYPTO
     androidTestImplementation ModuleLib.MMKV
     androidTestImplementation ModuleLib.PAPER
     androidTestImplementation ModuleLib.HAWK

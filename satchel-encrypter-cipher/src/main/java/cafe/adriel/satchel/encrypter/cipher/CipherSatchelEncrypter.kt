@@ -21,12 +21,7 @@ class CipherSatchelEncrypter private constructor(
             CipherSatchelEncrypter(cipher, cipherKey)
 
         fun with(cipherKey: CipherKey, transformation: String = DEFAULT_TRANSFORMATION): CipherSatchelEncrypter =
-            with(
-                Cipher.getInstance(
-                    transformation
-                ),
-                cipherKey
-            )
+            with(Cipher.getInstance(transformation), cipherKey)
     }
 
     sealed class CipherKey {

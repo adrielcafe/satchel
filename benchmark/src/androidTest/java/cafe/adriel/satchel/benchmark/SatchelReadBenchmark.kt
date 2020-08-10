@@ -5,14 +5,13 @@ import androidx.benchmark.junit4.BenchmarkRule
 import androidx.benchmark.junit4.measureRepeated
 import androidx.test.core.app.ApplicationProvider
 import cafe.adriel.satchel.Satchel
-import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
+import cafe.adriel.satchel.encrypter.bypass.BypassSatchelEncrypter
 import cafe.adriel.satchel.ktx.get
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.file.FileSatchelStorer
 import com.orhanobut.hawk.Hawk
 import com.tencent.mmkv.MMKV
 import io.paperdb.Paper
-import kotlinx.coroutines.test.TestCoroutineScope
 import org.junit.Rule
 import org.junit.Test
 
@@ -23,31 +22,26 @@ class SatchelReadBenchmark {
 
     @Test
     fun satchel() {
-        val storer = FileSatchelStorer(randomFile)
-        val serializer = RawSatchelSerializer
-        val encrypter = NoneSatchelEncrypter
-
-        val writeSatchel = Satchel.with(storer, serializer, encrypter)
+        val satchel = Satchel.with(FileSatchelStorer(randomFile), RawSatchelSerializer, BypassSatchelEncrypter)
 
         sampleData.forEach { (key, value) ->
-            writeSatchel[key] = value
+            satchel[key] = value
         }
 
         benchmarkRule.measureRepeated {
-            val readSatchel = Satchel.with(storer, serializer, encrypter)
             sampleData.forEach { (key, _) ->
-                val storedValue = readSatchel.get<String>(key)
+                val storedValue = satchel.get<String>(key)
             }
         }
     }
 
     @Test
     fun sharedPreferences() {
-        val preferenceName = randomName
-        ApplicationProvider
+        val sharedPreferences = ApplicationProvider
             .getApplicationContext<Context>()
-            .getSharedPreferences(preferenceName, Context.MODE_PRIVATE)
-            .edit()
+            .getSharedPreferences(randomName, Context.MODE_PRIVATE)
+
+        sharedPreferences.edit()
             .apply {
                 sampleData.forEach { (key, value) ->
                     putString(key, value)
@@ -56,11 +50,8 @@ class SatchelReadBenchmark {
             .commit()
 
         benchmarkRule.measureRepeated {
-            val readSharedPreferences = ApplicationProvider
-                .getApplicationContext<Context>()
-                .getSharedPreferences(preferenceName, Context.MODE_PRIVATE)
             sampleData.forEach { (key, _) ->
-                val storedValue = readSharedPreferences.getString(key, null)
+                val storedValue = sharedPreferences.getString(key, null)
             }
         }
     }
@@ -68,16 +59,15 @@ class SatchelReadBenchmark {
     @Test
     fun mmkv() {
         MMKV.initialize(ApplicationProvider.getApplicationContext<Context>())
-        val id = randomName
-        val writeMmkv = MMKV.mmkvWithID(id, MMKV.SINGLE_PROCESS_MODE)
+        val mmkv = MMKV.mmkvWithID(randomName, MMKV.SINGLE_PROCESS_MODE)
+
         sampleData.forEach { (key, value) ->
-            writeMmkv.encode(key, value)
+            mmkv.encode(key, value)
         }
 
         benchmarkRule.measureRepeated {
-            val readMmkv = MMKV.mmkvWithID(id)
             sampleData.forEach { (key, _) ->
-                val storedValue = readMmkv.decodeString(key)
+                val storedValue = mmkv.decodeString(key)
             }
         }
     }
@@ -85,16 +75,15 @@ class SatchelReadBenchmark {
     @Test
     fun paper() {
         Paper.init(ApplicationProvider.getApplicationContext())
-        val bookName = randomName
-        val writePaper = Paper.book(bookName)
+        val paper = Paper.book(randomName)
+
         sampleData.forEach { (key, value) ->
-            writePaper.write(key, value)
+            paper.write(key, value)
         }
 
         benchmarkRule.measureRepeated {
-            val readPaper = Paper.book(bookName)
             sampleData.forEach { (key, _) ->
-                val storedValue = readPaper.read<String>(key)
+                val storedValue = paper.read<String>(key)
             }
         }
     }
@@ -102,6 +91,7 @@ class SatchelReadBenchmark {
     @Test
     fun hawk() {
         Hawk.init(ApplicationProvider.getApplicationContext()).build()
+
         sampleData.forEach { (key, value) ->
             Hawk.put(key, value)
         }

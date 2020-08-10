@@ -23,8 +23,8 @@ class EncryptedFileSatchelStorer private constructor(
 
         fun with(context: Context, file: File): EncryptedFileSatchelStorer =
             with(
-                file,
-                EncryptedFile
+                file = file,
+                encryptedFile = EncryptedFile
                     .Builder(file, context, MasterKeys.getOrCreate(DEFAULT_KEY_GEN_SPEC), DEFAULT_ENCRYPTION_SCHEME)
                     .build()
             )

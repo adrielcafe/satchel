@@ -5,13 +5,12 @@ import androidx.benchmark.junit4.BenchmarkRule
 import androidx.benchmark.junit4.measureRepeated
 import androidx.test.core.app.ApplicationProvider
 import cafe.adriel.satchel.Satchel
-import cafe.adriel.satchel.encrypter.none.NoneSatchelEncrypter
+import cafe.adriel.satchel.encrypter.bypass.BypassSatchelEncrypter
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.file.FileSatchelStorer
 import com.orhanobut.hawk.Hawk
 import com.tencent.mmkv.MMKV
 import io.paperdb.Paper
-import kotlinx.coroutines.test.TestCoroutineScope
 import org.junit.Rule
 import org.junit.Test
 
@@ -22,11 +21,7 @@ class SatchelWriteBenchmark {
 
     @Test
     fun satchel() {
-        val satchel = Satchel.with(
-            storer = FileSatchelStorer(randomFile),
-            serializer = RawSatchelSerializer,
-            encrypter = NoneSatchelEncrypter
-        )
+        val satchel = Satchel.with(FileSatchelStorer(randomFile), RawSatchelSerializer, BypassSatchelEncrypter)
 
         benchmarkRule.measureRepeated {
             sampleData.forEach { (key, value) ->
@@ -37,16 +32,16 @@ class SatchelWriteBenchmark {
 
     @Test
     fun sharedPreferences() {
-        val editor = ApplicationProvider
+        val sharedPreferences = ApplicationProvider
             .getApplicationContext<Context>()
             .getSharedPreferences(randomName, Context.MODE_PRIVATE)
             .edit()
 
         benchmarkRule.measureRepeated {
             sampleData.forEach { (key, value) ->
-                editor.putString(key, value)
+                sharedPreferences.putString(key, value)
             }
-            editor.apply()
+            sharedPreferences.apply()
         }
     }
 
