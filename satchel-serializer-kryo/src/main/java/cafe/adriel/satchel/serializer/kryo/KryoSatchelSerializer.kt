@@ -23,7 +23,10 @@ object KryoSatchelSerializer : SatchelSerializer {
         }
 
     override fun deserialize(data: ByteArray): Map<String, Any> =
-        Input(data).use {
-            kryo.readClassAndObject(it) as Map<String, Any>
+        when {
+            data.isEmpty() -> emptyMap()
+            else -> Input(data).use {
+                kryo.readClassAndObject(it) as Map<String, Any>
+            }
         }
 }

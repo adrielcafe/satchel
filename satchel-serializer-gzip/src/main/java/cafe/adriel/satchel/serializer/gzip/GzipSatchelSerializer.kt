@@ -18,7 +18,10 @@ object GzipSatchelSerializer : SatchelSerializer {
         }
 
     override fun deserialize(data: ByteArray): Map<String, Any> =
-        GZIPInputStream(data.inputStream()).use { gzipStream ->
-            gzipStream.readBytes().deserialize()
+        when {
+            data.isEmpty() -> emptyMap()
+            else -> GZIPInputStream(data.inputStream()).use { gzipStream ->
+                gzipStream.readBytes().deserialize()
+            }
         }
 }

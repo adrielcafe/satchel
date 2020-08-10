@@ -13,8 +13,12 @@ object ProtobufSatchelSerializer : SatchelSerializer {
             .toByteArray()
 
     override fun deserialize(data: ByteArray): Map<String, Any> =
-        SatchelProto.Satchel
-            .parseFrom(data)
-            .storageMap
-            .mapValues { it.value.toAnyValue() }
+        when {
+            data.isEmpty() -> emptyMap()
+            else ->
+                SatchelProto.Satchel
+                    .parseFrom(data)
+                    .storageMap
+                    .mapValues { it.value.toAnyValue() }
+        }
 }

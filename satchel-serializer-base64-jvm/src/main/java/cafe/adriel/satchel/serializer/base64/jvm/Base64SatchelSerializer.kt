@@ -11,5 +11,8 @@ object Base64SatchelSerializer : SatchelSerializer {
         Base64.getEncoder().encode(data.serialize())
 
     override fun deserialize(data: ByteArray): Map<String, Any> =
-        Base64.getDecoder().decode(data).deserialize()
+        when {
+            data.isEmpty() -> emptyMap()
+            else -> Base64.getDecoder().decode(data).deserialize()
+        }
 }

@@ -10,5 +10,8 @@ object RawSatchelSerializer : SatchelSerializer {
         data.serialize()
 
     override fun deserialize(data: ByteArray): Map<String, Any> =
-        data.deserialize()
+        when {
+            data.isEmpty() -> emptyMap()
+            else -> data.deserialize()
+        }
 }
