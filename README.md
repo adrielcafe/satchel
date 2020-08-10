@@ -108,7 +108,7 @@ satchel["key"] = "value"
 ```
 
 ## API
-Satchel has a simple and familiar API based on [MutableMap](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/) and [SharedPreferences](https://developer.android.com/reference/android/content/SharedPreferences):
+Satchel has a simple and familiar [API](https://github.com/adrielcafe/satchel/blob/master/satchel-core/src/main/java/cafe/adriel/satchel/SatchelStorage.kt) based on [MutableMap](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/) and [SharedPreferences](https://developer.android.com/reference/android/content/SharedPreferences):
 ```kotlin
 satchel.apply {
     val firstName = get<String>("firstName")
@@ -146,9 +146,9 @@ You can be notified every time the storage changes, just call `addListener()` to
 ```kotlin
 satchel.addListener(lifecycleScope) { event ->
     when (event) {
-        is Set -> { /* ... */ }
-        is Remove -> { /* ... */ }
-        is Clear -> { /* ... */ }
+        is SatchelEvent.Set -> { /* ... */ }
+        is SatchelEvent.Remove -> { /* ... */ }
+        is SatchelEvent.Clear -> { /* ... */ }
     }
 }
 ```
@@ -313,7 +313,7 @@ You can run the benchmark by yourself, just execute the following command:
 ./gradlew benchmark:connectedCheck
 ```
 
-The benchmark below was made on a [Samsung Galaxy S20](https://www.gsmarena.com/samsung_galaxy_s20-10081.php) (Exynos 990).
+The benchmark below was made on a [Samsung Galaxy S20](https://www.gsmarena.com/samsung_galaxy_s20-10081.php).
 
 ## Similar libraries
 For this benchmark, we use a local Satchel instance with the stock modules (`FileSatchelStorer`, `BypassSatchelEncrypter` and `RawSatchelSerializer`) from the core library.
