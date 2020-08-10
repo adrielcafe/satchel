@@ -19,7 +19,7 @@ It's backed by [Coroutines](https://kotlinlang.org/docs/reference/coroutines-ove
 * Small: the [core library](#setup) has ~35kb and contains everything you need to get started
 * Simple: has an easy to use [API](#api)
 * Modular: 10 (optional) built-in [modules](#modules) to choose from
-* Extensible: create your own [Storer](#storers), [Encrypter](#encrypters) and [Serializer](#serializers)
+* Extensible: create your own [Storer](#build-your-own-storer), [Encrypter](#build-your-own-encrypter) and [Serializer](#build-your-own-serializer)
 
 ## Supported types
 - [x] `Double` and `List<Double>`
@@ -162,7 +162,7 @@ Satchel has 3 different categories of modules:
 The core library comes with one stock module for each category: [FileSatchelStorer](#FileSatchelStorer), [BypassSatchelEncrypter](#BypassSatchelEncrypter) and [RawSatchelSerializer](#RawSatchelSerializer). All the other libraries are *optional*.
 
 ### Storers
-If you are developing for Android, I recommend to use the [Context.filesDir](https://developer.android.com/training/data-storage/files#WriteFileInternal) as the parent folder. If you want to save in the external storage remember to [ask for write permission](https://developer.android.com/training/data-storage/files#ExternalStoragePermissions) first.
+If you are developing for Android, I recommend to use the [Context.filesDir](https://developer.android.com/training/data-storage/app-specific) as the parent folder. If you want to save in the external storage remember to [ask for write permission](https://developer.android.com/training/data-storage#permissions) first.
 ```kotlin
 val file = File(context.filesDir, "satchel.storage")
 ```
@@ -313,7 +313,7 @@ You can run the benchmark by yourself, just execute the following command:
 ./gradlew benchmark:connectedCheck
 ```
 
-The benchmark below was made on a [Samsung Galaxy S20](https://www.gsmarena.com/samsung_galaxy_s20-10081.php).
+The benchmark below was made on a [Samsung Galaxy S20](https://www.gsmarena.com/samsung_galaxy_s20-10081.php) (Exynos 990).
 
 ## Similar libraries
 For this benchmark, we use a local Satchel instance with the stock modules (`FileSatchelStorer`, `BypassSatchelEncrypter` and `RawSatchelSerializer`) from the core library.
