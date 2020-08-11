@@ -3,7 +3,7 @@ package cafe.adriel.satchel.serializer
 import cafe.adriel.satchel.serializer.base64.jvm.Base64SatchelSerializer
 import cafe.adriel.satchel.serializer.gzip.GzipSatchelSerializer
 import cafe.adriel.satchel.serializer.kryo.KryoSatchelSerializer
-import cafe.adriel.satchel.serializer.protobuf.ProtobufSatchelSerializer
+import cafe.adriel.satchel.serializer.protobuf.lite.ProtobufLiteSatchelSerializer
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.util.SampleData
 import java.util.stream.Stream
@@ -19,7 +19,7 @@ class SatchelSerializerTest {
     private val gzipSerializer = GzipSatchelSerializer
     private val base64Serializer = Base64SatchelSerializer
     private val kryoSerializer = KryoSatchelSerializer
-    private val protobufSerializer = ProtobufSatchelSerializer
+    private val protobufSerializer = ProtobufLiteSatchelSerializer
     // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
 //    private val flatbuffersSerializer = FlatbuffersSatchelSerializer
 

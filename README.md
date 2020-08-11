@@ -30,7 +30,7 @@ It's backed by [Coroutines](https://kotlinlang.org/docs/reference/coroutines-ove
 - [x] `String` and `List<String>`
 - [x] `Serializable`¹
 
-¹ *Not supported by `satchel-serializer-protobuf`*
+¹ *Not supported by `satchel-serializer-protobuf-lite`*
 
 # Setup
 1. Add the JitPack repository to your project level `build.gradle`:
@@ -62,7 +62,7 @@ dependencies {
     implementation "com.github.adrielcafe.satchel:satchel-serializer-base64-jvm:$currentVersion"
     implementation "com.github.adrielcafe.satchel:satchel-serializer-gzip:$currentVersion"
     implementation "com.github.adrielcafe.satchel:satchel-serializer-kryo:$currentVersion"
-    implementation "com.github.adrielcafe.satchel:satchel-serializer-protobuf:$currentVersion"
+    implementation "com.github.adrielcafe.satchel:satchel-serializer-protobuf-lite:$currentVersion"
 }
 ```
 Current version: [![JitPack](https://img.shields.io/jitpack/v/github/adrielcafe/satchel.svg?style=flat-square)](https://jitpack.io/#adrielcafe/satchel)
@@ -184,11 +184,11 @@ Create a `class` or `object` that implements the `SatchelStorer` interface:
 ```kotlin
 object MySatchelStorer : SatchelStorer {
     
-    suspend fun save(data: ByteArray) {
+    suspend fun store(data: ByteArray) {
         // Save the ByteArray wherever you want
     }
 
-    fun load(): ByteArray {
+    fun retrieve(): ByteArray {
         // Load and return the stored ByteArray
     }
 }
@@ -283,10 +283,10 @@ val serializer = KryoSatchelSerializer
 ```
 :warning: At the moment Kryo 5 only works on Android API 26 and later, [this issue](https://github.com/EsotericSoftware/kryo/issues/691) explains how to make it work in previous versions.
 
-#### [ProtobufSatchelSerializer](https://github.com/adrielcafe/satchel/blob/master/satchel-serializer-protobuf/src/main/java/cafe/adriel/satchel/serializer/protobuf/ProtobufSatchelSerializer.kt)
+#### [ProtobufLiteSatchelSerializer](https://github.com/adrielcafe/satchel/blob/master/satchel-serializer-protobuf-lite/src/main/java/cafe/adriel/satchel/serializer/protobuf/lite/ProtobufLiteSatchelSerializer.kt)
 Uses the [Protocol Buffers](https://github.com/protocolbuffers/protobuf) library for serialization/deserialization.
 ```kotlin
-val serializer = ProtobufSatchelSerializer
+val serializer = ProtobufLiteSatchelSerializer
 ```
 :warning: The current implementation doesn't supports [Serializable](https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html) objects.
 
@@ -350,4 +350,4 @@ Keep in mind that by using different modules you can get best or worse performan
 | `Base64SatchelSerializer` (Android) | 683.231   | 1.029.077  |
 | `Base64SatchelSerializer` (JVM)     | 703.769   | 1.041.000  |
 | `KryoSatchelSerializer`             | 209.923   | 170.654    |
-| `ProtobufSatchelSerializer`         | 629.116   | 1.319.961  |
+| `ProtobufLiteSatchelSerializer`     | 629.116   | 1.319.961  |

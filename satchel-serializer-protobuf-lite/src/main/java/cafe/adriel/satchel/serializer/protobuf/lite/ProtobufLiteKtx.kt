@@ -1,12 +1,12 @@
-package cafe.adriel.satchel.serializer.protobuf
+package cafe.adriel.satchel.serializer.protobuf.lite
 
-import cafe.adriel.satchel.serializer.protobuf.proto.SatchelProto
-import cafe.adriel.satchel.serializer.protobuf.proto.SatchelProto.Value.Type.TypeCase
+import cafe.adriel.satchel.serializer.protobuf.lite.proto.SatchelProto.Value
+import cafe.adriel.satchel.serializer.protobuf.lite.proto.SatchelProto.Value.Type
+import cafe.adriel.satchel.serializer.protobuf.lite.proto.SatchelProto.Value.Type.TypeCase
 
-internal fun Any.toProtoValue(): SatchelProto.Value =
+internal fun Any.toProtoValue(): Value =
     if (this is List<*>) {
-        SatchelProto.Value
-            .newBuilder()
+        Value.newBuilder()
             .also { builder ->
                 this.forEach { item ->
                     item
@@ -16,16 +16,13 @@ internal fun Any.toProtoValue(): SatchelProto.Value =
             }
             .build()
     } else {
-        SatchelProto.Value
-            .newBuilder()
+        Value.newBuilder()
             .setSingleValue(getProtoType(this))
             .build()
     }
 
-private fun getProtoType(value: Any): SatchelProto.Value.Type =
-    SatchelProto.Value
-        .Type
-        .newBuilder()
+private fun getProtoType(value: Any): Type =
+    Type.newBuilder()
         .apply {
             when (value) {
                 is Double -> doubleValue = value
@@ -39,14 +36,14 @@ private fun getProtoType(value: Any): SatchelProto.Value.Type =
         }
         .build()
 
-internal fun SatchelProto.Value.toAnyValue(): Any =
+internal fun Value.toAnyValue(): Any =
     if (hasSingleValue()) {
         singleValue.toSingleValue()
     } else {
         multiValueList.toListValue()
     }
 
-internal fun SatchelProto.Value.Type.toSingleValue(): Any =
+internal fun Type.toSingleValue(): Any =
     when (typeCase) {
         TypeCase.DOUBLE_VALUE -> doubleValue
         TypeCase.FLOAT_VALUE -> floatValue
@@ -57,5 +54,5 @@ internal fun SatchelProto.Value.Type.toSingleValue(): Any =
         else -> throw TypeCastException("Protobuf type not supported: $typeCase")
     }
 
-internal fun List<SatchelProto.Value.Type>.toListValue(): List<Any> =
+internal fun List<Type>.toListValue(): List<Any> =
     mapNotNull { it.toSingleValue() }

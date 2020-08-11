@@ -52,7 +52,7 @@ class SatchelTest {
         @Test
         fun `when init Satchel then load stored data`() {
             coVerifyOrder {
-                storer.load()
+                storer.retrieve()
                 encrypter.decrypt(any())
                 serializer.deserialize(any())
             }
@@ -69,7 +69,7 @@ class SatchelTest {
             coVerifyOrder {
                 serializer.serialize(any())
                 encrypter.encrypt(any())
-                storer.save(any())
+                storer.store(any())
             }
         }
 
@@ -81,7 +81,7 @@ class SatchelTest {
             coVerify(exactly = 2) {
                 serializer.serialize(any())
                 encrypter.encrypt(any())
-                storer.save(any())
+                storer.store(any())
             }
         }
 
@@ -93,7 +93,7 @@ class SatchelTest {
             coVerify(exactly = 1) {
                 serializer.serialize(any())
                 encrypter.encrypt(any())
-                storer.save(any())
+                storer.store(any())
             }
         }
 
@@ -104,7 +104,7 @@ class SatchelTest {
             coVerifyOrder {
                 serializer.serialize(any())
                 encrypter.encrypt(any())
-                storer.save(any())
+                storer.store(any())
             }
         }
     }

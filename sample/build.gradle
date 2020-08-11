@@ -31,7 +31,7 @@ dependencies {
     
     implementation project(':satchel-serializer-base64-android')
     implementation project(':satchel-serializer-gzip')
-    implementation project(':satchel-serializer-protobuf')
+    implementation project(':satchel-serializer-protobuf-lite')
     // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
 //    implementation project(':satchel-serializer-flatbuffers')
     implementation project(':satchel-serializer-kryo')

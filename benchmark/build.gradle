@@ -41,7 +41,7 @@ dependencies {
     androidTestImplementation project(':satchel-serializer-gzip')
     androidTestImplementation project(':satchel-serializer-base64-jvm')
     androidTestImplementation project(':satchel-serializer-base64-android')
-    androidTestImplementation project(':satchel-serializer-protobuf')
+    androidTestImplementation project(':satchel-serializer-protobuf-lite')
     // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
 //    androidTestImplementation project(':satchel-serializer-flatbuffers')
     androidTestImplementation project(':satchel-serializer-kryo')

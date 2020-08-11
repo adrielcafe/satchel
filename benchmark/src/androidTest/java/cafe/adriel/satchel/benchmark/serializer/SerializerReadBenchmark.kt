@@ -3,13 +3,12 @@ package cafe.adriel.satchel.benchmark.serializer
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.benchmark.junit4.measureRepeated
 import cafe.adriel.satchel.benchmark.sampleData
-import cafe.adriel.satchel.ktx.serialize
 import cafe.adriel.satchel.serializer.SatchelSerializer
 import cafe.adriel.satchel.serializer.base64.android.Base64SatchelSerializer as AndroidBase64SatchelSerializer
 import cafe.adriel.satchel.serializer.base64.jvm.Base64SatchelSerializer as JvmBase64SatchelSerializer
 import cafe.adriel.satchel.serializer.gzip.GzipSatchelSerializer
 import cafe.adriel.satchel.serializer.kryo.KryoSatchelSerializer
-import cafe.adriel.satchel.serializer.protobuf.ProtobufSatchelSerializer
+import cafe.adriel.satchel.serializer.protobuf.lite.ProtobufLiteSatchelSerializer
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
@@ -33,7 +32,7 @@ class SerializerReadBenchmark {
     fun base64Android() = runBenchmark(AndroidBase64SatchelSerializer)
 
     @Test
-    fun protobuf() = runBenchmark(ProtobufSatchelSerializer)
+    fun protobuf() = runBenchmark(ProtobufLiteSatchelSerializer)
 
     // TODO waiting for fix https://github.com/google/flatbuffers/issues/5944
 //    @Test

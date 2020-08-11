@@ -42,8 +42,8 @@ class SatchelStorerTest {
         ).map { storer ->
             dynamicTest(storer::class.simpleName) {
                 runBlockingTest {
-                    storer.save(sampleByteArray)
-                    val loaded = storer.load()
+                    storer.store(sampleByteArray)
+                    val loaded = storer.retrieve()
 
                     expectThat(loaded) contentEquals sampleByteArray
                     expectThat(loaded) propertiesAreEqualTo sampleByteArray

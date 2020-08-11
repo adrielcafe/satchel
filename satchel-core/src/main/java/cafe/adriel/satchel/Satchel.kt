@@ -109,7 +109,7 @@ class Satchel private constructor(
     }
 
     private fun loadStorage(): Map<String, Any> =
-        storer.load()
+        storer.retrieve()
             .let(encrypter::decrypt)
             .let(serializer::deserialize)
 
@@ -118,7 +118,7 @@ class Satchel private constructor(
             saveMutex.withLock {
                 serializer.serialize(storage)
                     .let { encrypter.encrypt(it) }
-                    .let { storer.save(it) }
+                    .let { storer.store(it) }
             }
         }
     }

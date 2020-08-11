@@ -1,9 +1,9 @@
-package cafe.adriel.satchel.serializer.protobuf
+package cafe.adriel.satchel.serializer.protobuf.lite
 
 import cafe.adriel.satchel.serializer.SatchelSerializer
-import cafe.adriel.satchel.serializer.protobuf.proto.SatchelProto
+import cafe.adriel.satchel.serializer.protobuf.lite.proto.SatchelProto
 
-object ProtobufSatchelSerializer : SatchelSerializer {
+object ProtobufLiteSatchelSerializer : SatchelSerializer {
 
     override suspend fun serialize(data: Map<String, Any>): ByteArray =
         SatchelProto.Satchel

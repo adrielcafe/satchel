@@ -29,10 +29,10 @@ class StorerReadBenchmark {
     )
 
     private fun runBenchmark(storer: SatchelStorer) = runBlockingTest {
-        storer.save(serializedSampleData)
+        storer.store(serializedSampleData)
 
         benchmarkRule.measureRepeated {
-            storer.load()
+            storer.retrieve()
         }
     }
 }

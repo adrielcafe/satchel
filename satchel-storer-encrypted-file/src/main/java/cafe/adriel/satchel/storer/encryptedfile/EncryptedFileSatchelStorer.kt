@@ -30,14 +30,14 @@ class EncryptedFileSatchelStorer private constructor(
             )
     }
 
-    override suspend fun save(data: ByteArray) {
+    override suspend fun store(data: ByteArray) {
         file.delete()
         encryptedFile.openFileOutput().use { stream ->
             stream.write(data)
         }
     }
 
-    override fun load(): ByteArray =
+    override fun retrieve(): ByteArray =
         when {
             file.isEmpty -> ByteArray(0)
             else -> encryptedFile.openFileInput().use { stream ->
