@@ -115,11 +115,13 @@ satchel.apply {
 
     val notificationsEnabled = getOrDefault("notificationsEnabled", false)
 
-    val favoritePostIds = getOrElse("favoritePostIds") { emptySet<Int>() }
+    val favoritePostIds = getOrDefault("favoritePostIds") { emptySet<Int>() }
 
     val registeredAt = getOrSet("registeredAt", currentTimestamp)
 
-    set("username", "John Doe")
+    val lastName = getOrSet("lastName") { "Doe" }
+
+    set("username", "john.doe")
 
     setIfAbsent("lastName", lastName)
 
@@ -141,7 +143,26 @@ satchel.apply {
 
 But unlike `SharedPreferences`, there's no `apply()` or `commit()`. Changes are **saved asynchronously** every time a write operation (`set()`, `remove()` and `clear()`) happens.
 
-### Listening to events
+### Delegates
+It's possible to delegate the job of `get` and `set` the value of a specific key:
+```kotlin
+private var favoritePostIds by satchel.value(key = "favoritePostIds", defaultValue = emptySet<Int>())
+
+// Will call set(key, value)
+favoritePostIds = setOf(1, 2, 3)
+
+// Will call getOrDefault(key, defaultValue)
+showFavoritePosts(favoritePostIds)
+```
+
+If you doesn't specify a default value, it will return a nullable value:
+```kotlin
+private var username by satchel.value<String>("username")
+
+username?.let(::showProfile)
+```
+
+### Events
 You can be notified every time the storage changes, just call `addListener()` to register a listener in the specified `CoroutineScope`:
 ```kotlin
 satchel.addListener(lifecycleScope) { event ->
@@ -284,7 +305,7 @@ val serializer = KryoSatchelSerializer
 :warning: At the moment Kryo 5 only works on Android API 26 and later, [this issue](https://github.com/EsotericSoftware/kryo/issues/691) explains how to make it work in previous versions.
 
 #### [ProtobufLiteSatchelSerializer](https://github.com/adrielcafe/satchel/blob/master/satchel-serializer-protobuf-lite/src/main/java/cafe/adriel/satchel/serializer/protobuf/lite/ProtobufLiteSatchelSerializer.kt)
-Uses the [Protocol Buffers](https://github.com/protocolbuffers/protobuf) library for serialization/deserialization.
+Uses the [Protocol Buffers Java Lite](https://github.com/protocolbuffers/protobuf/blob/master/java/lite.md) library for serialization/deserialization.
 ```kotlin
 val serializer = ProtobufLiteSatchelSerializer
 ```

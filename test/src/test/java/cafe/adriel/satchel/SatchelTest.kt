@@ -3,7 +3,6 @@ package cafe.adriel.satchel
 import cafe.adriel.satchel.encrypter.bypass.BypassSatchelEncrypter
 import cafe.adriel.satchel.ktx.get
 import cafe.adriel.satchel.ktx.getOrDefault
-import cafe.adriel.satchel.ktx.getOrElse
 import cafe.adriel.satchel.ktx.getOrSet
 import cafe.adriel.satchel.serializer.raw.RawSatchelSerializer
 import cafe.adriel.satchel.storer.SatchelStorer
@@ -170,22 +169,6 @@ class SatchelTest {
         }
 
         @Nested
-        inner class GetOrElse {
-
-            @Test
-            fun `when key exists then return the current value`() {
-                satchel["key"] = "value"
-
-                expectThat(satchel.getOrElse("key") { "default value" }) isEqualTo "value"
-            }
-
-            @Test
-            fun `when key doesn't exist then return the default value`() {
-                expectThat(satchel.getOrElse("key") { "default value" }) isEqualTo "default value"
-            }
-        }
-
-        @Nested
         inner class GetOrDefault {
 
             @Test
@@ -198,6 +181,22 @@ class SatchelTest {
             @Test
             fun `when key doesn't exist then return the default value`() {
                 expectThat(satchel.getOrDefault("key", "default value")) isEqualTo "default value"
+            }
+        }
+
+        @Nested
+        inner class GetOrDefaultLambda {
+
+            @Test
+            fun `when key exists then return the current value`() {
+                satchel["key"] = "value"
+
+                expectThat(satchel.getOrDefault("key") { "default value" }) isEqualTo "value"
+            }
+
+            @Test
+            fun `when key doesn't exist then return the default value`() {
+                expectThat(satchel.getOrDefault("key") { "default value" }) isEqualTo "default value"
             }
         }
 
@@ -216,6 +215,26 @@ class SatchelTest {
             @Test
             fun `when key doesn't exist then return the default value and set it`() {
                 expectThat(satchel.getOrSet("key", "default value")) isEqualTo "default value"
+
+                verify(exactly = 1) { satchel["key"] = "default value" }
+            }
+        }
+
+        @Nested
+        inner class GetOrSetLambda {
+
+            @Test
+            fun `when key exists then return the current value`() {
+                satchel["key"] = "value"
+
+                expectThat(satchel.getOrSet("key") { "default value" }) isEqualTo "value"
+
+                verify(exactly = 0) { satchel["key"] = "default value" }
+            }
+
+            @Test
+            fun `when key doesn't exist then return the default value and set it`() {
+                expectThat(satchel.getOrSet("key") { "default value" }) isEqualTo "default value"
 
                 verify(exactly = 1) { satchel["key"] = "default value" }
             }
